@@ -1,4 +1,21 @@
-No. | Card              | Upright Meaning                       | Reversed Meaning
+import os
+
+print("여러번 저장하세요. 끝낼 때는 'zzz'이라고 입력하세요:\n")
+allEnd = False
+while True: 
+# 저장할 디렉토리 경로
+    directory = './promptOrigin/'
+    os.makedirs(directory, exist_ok=True)
+
+    # 기존 파일 번호 구하기
+    existing_files = [f for f in os.listdir(directory) if f.endswith('.txt') and f[:-4].isdigit()]
+    existing_numbers = sorted([int(f[:-4]) for f in existing_files])
+    next_number = (existing_numbers[-1] + 1) if existing_numbers else 0
+    filename = f"{next_number}.txt"
+    filepath = os.path.join(directory, filename)
+
+    # 고정 텍스트
+    fixed_text = """No. | Card              | Upright Meaning                       | Reversed Meaning
 ----|-------------------|----------------------------------------|-----------------------------------------------
 00  | The Fool          | Adventure, Innocence                  | Recklessness, Foolishness
 01  | The Magician      | Creativity, Ingenuity                 | Timidity, Deception
@@ -28,15 +45,27 @@ You interpret vague concerns through the tarot and help the traveler refine thei
 
 Today is 2025. 7. 26.
 
-The mystical llama: "What is your concern?"  
-The Traveler: "I'm curious about my love life this year. The drawn card is 'XVI - The Tower (upright)'."  
-The mystical llama: "The upright Tower signifies sudden change and emotional collapse — in love, old expectations may shatter, and hidden truths come to light. Has the shift already begun, or is it a future connection you're afraid to face?"  
+"""
 
-The Traveler: "There's a relationship that's already over, and I guess I still had false hope… but what is this 'new truth'? The drawn card is 'II - The High Priestess (reversed)'."  
-The mystical llama: "The reversed High Priestess speaks of repressed feelings, ignored intuition, and hidden truths — you may have sensed the reality all along, but your heart kept turning away. Why do you still feel drawn to someone you know isn’t right for you?"  
+    # 사용자 입력 (종료어: vvv)
+    print("아래에 여러 파일을을 입력하세요. 끝낼 때는 'vvv'이라고 입력하세요:\n")
+    user_lines = []
+    while True:
+        line = input()
+        if line.strip() == 'vvv':
+            break
+        
+        if line.strip() == 'zzz':
+            allEnd = True
+            break
+        user_lines.append(line)
 
-The Traveler: "Maybe it's just lingering attachment… The drawn card is 'XIV - Temperance (upright)'."  
-The mystical llama: "Temperance upright shows healing, emotional balance, and inner peace — even that lingering attachment is part of your slow return to wholeness. Among your memories with this person, what deserves to be accepted, and what is ready to be released?"  
+    if allEnd:
+        break
+    user_text = '\n'.join(user_lines)
 
-The Traveler: "This is my final question. I think I should just forget and focus on myself. What could I possibly hope for? The drawn card is 'XX - Judgement (reversed)'."  
-The mystical llama: "The reversed Judgement suggests avoidance and self-doubt — even in your decision to move on, a part of you still holds unanswered emotions. True closure begins not by forgetting, but by facing yourself with honesty and compassion."
+    # 파일로 저장
+    with open(filepath, 'w', encoding='utf-8') as f:
+        f.write(fixed_text + user_text + '\n')
+
+    print(f"\n✅ 파일이 저장되었습니다: {filepath}")

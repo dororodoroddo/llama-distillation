@@ -14,7 +14,6 @@ with open("config.json", "r", encoding="utf-8") as f:
     config = json.load(f)
 
 MODEL_NAME = config["student_model"]
-MODEL_PATH = ensure_model_exists(MODEL_NAME)
 TRAIN_FILE = config["train_file"]
 OUTPUT_DIR = config["output_dir"]
 GGUF_PATH = config["gguf_output"]
@@ -25,7 +24,7 @@ LR = config["learning_rate"]
 
 def train_and_convert():
     print("[distillation] 학습 시작")
-
+    MODEL_PATH = ensure_model_exists(MODEL_NAME)
     # 학습 데이터 로드
     dataset = load_dataset("json", data_files=TRAIN_FILE)["train"]
     tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH, local_files_only=True)
