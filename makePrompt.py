@@ -3,10 +3,11 @@ import json
 import re
 
 PROMPT_ORIGIN_DIR = "./promptOrigin"
-PROMPT_TRAIN_PATH = "./promptTrain/train_data.jsonl"
-PROMPT_TEST_PATH = "./promptTest/test_data.jsonl"
+TRAIN_FULL_PATH = "./promptTrain/train_data_full.jsonl"
+TRAIN_BLOCK_PATH = "./promptTrain/train_data_block.jsonl"
 
 def split_conversation_blocks(text: str):
+    # traveler / llama 구간 추출
     pattern = r'(The traveler: .*?\"|The mystical llama: .*?\")'
     parts = re.split(pattern, text, flags=re.DOTALL)
     header = parts[0].strip()
@@ -14,23 +15,26 @@ def split_conversation_blocks(text: str):
 
     blocks = []
     full_prefix = header + "\n"
-    for i in range(0, len(dialogue)-1, 2):
-        traveler = dialogue[i]
-        llama = dialogue[i+1]
-        full_prefix += traveler + "\n"
-        blocks.append({
-            "input": full_prefix.strip(),
-            "expected": llama.replace('The mystical llama: ', '').strip()
-        })
-        full_prefix += llama + "\n"
+    isFirst = True
+    for i in range(0, len(dialogue) - 1, 2):
+        traveler_line = dialogue[i]
+        llama_line = dialogue[i + 1]
+        # 블록 input = 이전 전체 + traveler만, expected = llama 응답만
+        full_prefix += traveler_line + "\n"
+        if not isFirst:
+            blocks.append({
+                "input": full_prefix.strip(),
+                "expected": llama_line.replace("The mystical llama: ", "").split("\"")[0].strip() + "\""
+            })
+        isFirst = False
+        full_prefix += llama_line + "\n"
     return blocks
 
-def generate_train_and_test():
+def generate_train():
     os.makedirs("./promptTrain", exist_ok=True)
-    os.makedirs("./promptTest", exist_ok=True)
 
-    with open(PROMPT_TRAIN_PATH, 'w', encoding='utf-8') as train_file, \
-         open(PROMPT_TEST_PATH, 'w', encoding='utf-8') as test_file:
+    with open(TRAIN_FULL_PATH, 'w', encoding='utf-8') as full_file, \
+         open(TRAIN_BLOCK_PATH, 'w', encoding='utf-8') as block_file:
 
         for filename in os.listdir(PROMPT_ORIGIN_DIR):
             if not filename.endswith(".txt"):
@@ -39,13 +43,13 @@ def generate_train_and_test():
             with open(path, 'r', encoding='utf-8') as f:
                 full_text = f.read().strip()
 
-            # 훈련용 전체 대화 저장
-            train_file.write(json.dumps({"text": full_text}, ensure_ascii=False) + "\n")
+            # 전체 대화 저장
+            full_file.write(json.dumps({"text": full_text}, ensure_ascii=False) + "\n")
 
-            # 테스트용 블록 분리
+            # 블록 분리 저장
             blocks = split_conversation_blocks(full_text)
             for block in blocks:
-                test_file.write(json.dumps(block, ensure_ascii=False) + "\n")
+                block_file.write(json.dumps(block, ensure_ascii=False) + "\n")
 
 if __name__ == "__main__":
-    generate_train_and_test()
+    generate_train()
