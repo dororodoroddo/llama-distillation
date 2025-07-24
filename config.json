@@ -1,12 +1,12 @@
+
 {
-  "student_model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
-  "train_file": "./promptTrain/train_data.jsonl",
-  "test_file": "./promptTest/test_data.jsonl",
-  "output_dir": "./outputModel",
-  "gguf_output": "./ouputGguf/tinyllama-distilled.gguf",
+  "base_model": "models/TinyLlama_TinyLlama-1.1B-Chat-v1.0",
+  "output_dir": "outputs/distilled",
+  "train_data_path_full": "./promptTrain/train_data_full.jsonl",
+  "train_data_path_block": "./promptTrain/train_data_block.jsonl",
+  "gguf_name": "tiny2.gguf",
   "max_length": 1536,
+  "fp16": true,
   "batch_size": 1,
-  "epochs": 3,
-  "learning_rate": 5e-5,
-  "fp16": true
+  "epochs": 3
 }

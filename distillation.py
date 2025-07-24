@@ -1,83 +1,113 @@
-# distillation.py
-# TinyLlama 모델 학습 및 GGUF 변환까지 수행합니다.
-
 import os
+import torch
 import json
-import subprocess
-from transformers import AutoTokenizer, AutoModelForCausalLM, Trainer, TrainingArguments
-from datasets import load_dataset, Dataset
-from utils.download_model import ensure_model_exists
+from datasets import load_dataset, concatenate_datasets
+from transformers import (
+    AutoTokenizer,
+    AutoModelForCausalLM,
+    Trainer,
+    TrainingArguments,
+    DataCollatorForLanguageModeling
+)
 
+def load_config(path: str):
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
 
-
-with open("config.json", "r", encoding="utf-8") as f:
-    config = json.load(f)
-
-MODEL_NAME = config["student_model"]
-TRAIN_FILE = config["train_file"]
-OUTPUT_DIR = config["output_dir"]
-GGUF_PATH = config["gguf_output"]
-MAX_LEN = config["max_length"]
-BATCH = config["batch_size"]
-EPOCHS = config["epochs"]
-LR = config["learning_rate"]
+def tokenize_dataset(tokenizer, dataset, max_length):
+    def tokenize_function(example):
+        if "text" in example:
+            return tokenizer(example["text"], truncation=True, max_length=max_length)
+        elif "input" in example and "expected" in example:
+            prompt = example["input"] + "\n" + example["expected"]
+            return tokenizer(prompt, truncation=True, max_length=max_length)
+        else:
+            raise ValueError("Unknown example format")
+    return dataset.map(tokenize_function, batched=True, remove_columns=dataset.column_names)
 
 def train_and_convert():
     print("[distillation] 학습 시작")
-    MODEL_PATH = ensure_model_exists(MODEL_NAME)
-    # 학습 데이터 로드
-    dataset = load_dataset("json", data_files=TRAIN_FILE)["train"]
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH, local_files_only=True)
 
-    # 텍스트 → input_ids + labels 변환
-    def tokenize(example):
-        tokenized = tokenizer(
-            example["text"],
-            padding="max_length",
-            truncation=True,
-            max_length=MAX_LEN
-        )
-        tokenized["labels"] = tokenized["input_ids"].copy()
-        return tokenized
+    config = load_config("config.json")
+    base_model_path = config["base_model"]
+    train_path_full = config["train_data_path_full"]
+    train_path_block = config["train_data_path_block"]
+    output_dir = config["output_dir"]
+    max_length = config.get("max_length", 1024)
+    fp16 = config.get("fp16", True)
+    batch_size = config.get("batch_size", 1)
+    epochs = config.get("epochs", 3)
+    gguf_name = config["gguf_name"]
 
-    tokenized_dataset = dataset.map(tokenize)
+    # CUDA 상태 초기화 (메모리 누수 방지)
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+        torch.cuda.reset_peak_memory_stats()
+        print("[✓] CUDA 캐시 초기화 및 메모리 통계 리셋")
 
-    # 모델 로드
-    model = AutoModelForCausalLM.from_pretrained(MODEL_PATH, local_files_only=True)
+    # 모델 및 토크나이저 불러오기
+    print("[✓] 모델 불러오는 중:", base_model_path)
+    tokenizer = AutoTokenizer.from_pretrained(base_model_path, use_fast=True)
+    model = AutoModelForCausalLM.from_pretrained(base_model_path)
 
-    # 학습 설정
-    args = TrainingArguments(
-        output_dir=OUTPUT_DIR,
-        per_device_train_batch_size=BATCH,
-        num_train_epochs=EPOCHS,
-        learning_rate=LR,
+    # 학습 데이터셋 로드 및 결합
+    dataset_full = load_dataset("json", data_files=train_path_full)["train"]
+    dataset_block = load_dataset("json", data_files=train_path_block)["train"]
+    print(f"[✓] Full 예제 수: {len(dataset_full)}, Block 예제 수: {len(dataset_block)}")
+
+    dataset = concatenate_datasets([dataset_full, dataset_block])
+
+    # 토크나이징 (메모리 관리 고려)
+    print("[•] 데이터 토크나이징 중...")
+    tokenized_dataset = tokenize_dataset(tokenizer, dataset, max_length)
+
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+
+    # 학습 인자 설정
+    training_args = TrainingArguments(
+        output_dir=output_dir,
+        overwrite_output_dir=True,
+        per_device_train_batch_size=batch_size,
+        num_train_epochs=epochs,
+        prediction_loss_only=True,
         logging_steps=10,
-        save_strategy="epoch",
-        fp16=config.get("fp16", False),
+        save_strategy="no",
+        fp16=fp16 and torch.cuda.is_available(),
         report_to="none"
     )
 
-    # 학습 시작
+    data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
+
     trainer = Trainer(
         model=model,
-        args=args,
+        args=training_args,
         train_dataset=tokenized_dataset,
+        tokenizer=tokenizer,
+        data_collator=data_collator
     )
 
+    # 학습 실행
+    print("[→] 학습 시작...")
     trainer.train()
-    trainer.save_model(OUTPUT_DIR)
-    tokenizer.save_pretrained(OUTPUT_DIR)
+    print("[✓] 학습 완료")
+
+    if torch.cuda.is_available():
+        print(f"[GPU 메모리 사용량] {torch.cuda.max_memory_allocated() / (1024 ** 2):.2f} MB")
+        torch.cuda.empty_cache()
+
+    # 모델 저장
+    print("[→] 모델 저장 중...")
+    trainer.save_model(output_dir)
+    tokenizer.save_pretrained(output_dir)
 
     # GGUF 변환
-    print("[distillation] GGUF 변환 중...")
-    convert_script = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "llama.cpp", "convert.py"))
-    subprocess.run([
-        "python3", convert_script,
-        OUTPUT_DIR,
-        "--outfile", GGUF_PATH,
-        "--vocab-type", "spm"
-    ])
-    print(f"[distillation] GGUF 변환 완료 → {GGUF_PATH}")
+    try:
+        print("[→] GGUF 변환 시작...")
+        os.system(f"python ../llama.cpp/convert.py --outfile {gguf_name} --outdir ./ouputGguf {output_dir}")
+        print("[✓] GGUF 변환 완료")
+    except Exception as e:
+        print("[!] GGUF 변환 실패:", e)
 
 if __name__ == "__main__":
     train_and_convert()
