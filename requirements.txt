@@ -1,0 +1,11 @@
+# Core dependencies
+torch>=2.0.0
+transformers>=4.38.0
+datasets>=2.10.0
+tqdm
+sentencepiece
+accelerate>=0.21.0
+huggingface_hub
+
+# Optional for evaluation and debugging
+scikit-learn
