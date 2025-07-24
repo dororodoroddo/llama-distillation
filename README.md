@@ -14,8 +14,7 @@
 ├── makePrompt.py        # promptOrigin → promptTrain/Test 생성
 ├── ouputGguf/           # 변환된 gguf 파일 저장
 ├── promptOrigin/        # 원본 하루치 대화 (.txt)
-├── promptTest/          # 테스트용 jsonl (프롬프트 + expected)
-├── promptTrain/         # 학습용 jsonl (하루치 전체 대화 한 줄)
+├── promptTrain/         # 학습용 jsonl (하루치 전체 대화 한 줄 / 프롬프트 + expected)
 └── llama.cpp/           # GGUF 변환용 스크립트가 들어있는 디렉토리 (경로 주의)
 ```
 
@@ -50,7 +49,6 @@ pip install -r requirements.txt
 # index.py 실행 예시 (CLI)
 python index.py make            # makePrompt만 실행
 python index.py distill         # distillation만 실행
-python index.py evaluate        # evaluate만 실행
 python index.py all             # 전체 파이프라인 실행
 ```
 

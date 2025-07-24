@@ -1,6 +1,11 @@
 # Core dependencies
-torch>=2.2.0
-transformers>=4.38.0
+--extra-index-url https://download.pytorch.org/whl/cu118
+
+numpy==1.26.4
+transformers>=4.30.0
+torch==2.1.0+cu118
+torchvision==0.16.0+cu118
+torchaudio==2.1.0
 datasets>=2.10.0
 tqdm
 sentencepiece

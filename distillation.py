@@ -15,14 +15,30 @@ def load_config(path: str):
         return json.load(f)
 
 def tokenize_dataset(tokenizer, dataset, max_length):
-    def tokenize_function(example):
-        if "text" in example:
-            return tokenizer(example["text"], truncation=True, max_length=max_length)
-        elif "input" in example and "expected" in example:
-            prompt = example["input"] + "\n" + example["expected"]
-            return tokenizer(prompt, truncation=True, max_length=max_length)
+    def tokenize_function(example_batch):
+        if example_batch.get("text") is not None:
+            try:
+
+                a = tokenizer(
+                     [example_batch["text"][0]],
+                    truncation=True,
+                    max_length=max_length,
+                    padding="max_length"
+                )
+                return a
+            except BaseException as e:
+                raise RuntimeError("문제가 발생했습니다!")
+        elif example_batch.get("input") is not None and example_batch.get("expected") is not None:
+            prompts = [i + "\n" + e for i, e in zip(example_batch["input"], example_batch["expected"])]
+            return tokenizer(
+                prompts,
+                truncation=True,
+                max_length=max_length,
+                padding="max_length"
+            )
         else:
-            raise ValueError("Unknown example format")
+            raise ValueError("Unknown format for example_batch")
+
     return dataset.map(tokenize_function, batched=True, remove_columns=dataset.column_names)
 
 def train_and_convert():
