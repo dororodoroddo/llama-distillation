@@ -1,0 +1,16 @@
+# 모델 파일 및 캐시
+/models/
+*.gguf
+*.bin
+*.safetensors
+/trained_model/
+
+# Python
+__pycache__/
+*.py[cod]
+*.log
+
+# 가상환경
+.venv/
+.env
+

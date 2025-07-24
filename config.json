@@ -1,0 +1,12 @@
+{
+  "student_model": "./models/TinyLlama-1.1B-Chat-v1.0",
+  "train_file": "./promptTrain/train.jsonl",
+  "test_file": "./promptTest/test.jsonl",
+  "output_dir": "./outputModel",
+  "gguf_output": "./ouputGguf/tinyllama-distilled.gguf",
+  "max_length": 1536,
+  "batch_size": 1,
+  "epochs": 3,
+  "learning_rate": 5e-5,
+  "fp16": true
+}
