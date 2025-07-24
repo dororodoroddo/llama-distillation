@@ -29,7 +29,7 @@ Python 3.9+ 환경을 권장하며, 가상환경 사용을 추천합니다.
 
 ```bash
 python -m venv .venv
-.venv\Scripts\activate  # Windows
+source .venv/Scripts/activate
 pip install -r requirements.txt
 ```
 
@@ -47,16 +47,12 @@ pip install -r requirements.txt
 ### 전체 파이프라인 실행
 
 ```bash
-python index.py all
+# index.py 실행 예시 (CLI)
+python index.py make            # makePrompt만 실행
+python index.py distill         # distillation만 실행
+python index.py evaluate        # evaluate만 실행
+python index.py all             # 전체 파이프라인 실행
 ```
-
-### 개별 단계 실행
-
-- `프롬프트 생성`: `python index.py make`
-- `학습 및 gguf 변환`: `python index.py distill`
-- `평가`: `python index.py eval`
-
----
 
 ## 🧠 모델 초기 다운로드
 
@@ -83,7 +79,3 @@ models/
 - `llama.cpp/convert.py`가 `../llama.cpp/convert.py`에 정확히 위치했는지 확인
 - Windows에서도 `subprocess.run([...])` 실행 시 `python` 경로가 제대로 연결됐는지 확인 (필요 시 `"python"` → `"python3"` 혹은 `sys.executable` 사용)
 - `PYTORCH_MPS_HIGH_WATERMARK_RATIO`는 Windows에서는 무관함 (Mac 전용)
-
----
-
-이제 Windows 환경에서도 전체 파이프라인이 정상적으로 작동할 수 있도록 경로 설정과 실행법이 포함되어 있습니다.
