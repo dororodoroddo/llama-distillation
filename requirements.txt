@@ -12,5 +12,9 @@ sentencepiece
 accelerate>=0.21.0
 huggingface_hub
 
+# Lora
+peft 
+bitsandbytes
+
 # Optional for evaluation and debugging
 scikit-learn

@@ -5,7 +5,7 @@
   "train_data_path_full": "./promptTrain/train_data_full.jsonl",
   "train_data_path_block": "./promptTrain/train_data_block.jsonl",
   "gguf_name": "tiny2.gguf",
-  "max_length": 1536,
+  "max_length": 512,
   "fp16": true,
   "batch_size": 1,
   "epochs": 3
