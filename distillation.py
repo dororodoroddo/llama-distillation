@@ -2,8 +2,10 @@ import os
 import json
 import subprocess
 import torch
+import shutil
 from datasets import load_from_disk
 from transformers import (
+    set_seed,
     AutoTokenizer,
     AutoModelForCausalLM,
     Trainer,
@@ -17,10 +19,25 @@ def load_config(path: str):
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
+class LoggingDataset:
+    def __init__(self, dataset):
+        self.dataset = dataset
 
-class GpuMemoryLogger(TrainerCallback):
+    def __getitem__(self, idx):
+        print(f"[🧾] Using sample index: {idx}")
+        return self.dataset[idx]
+
+    def __len__(self):
+        return len(self.dataset)
+
+class SavePermanentCheckpointCallback(TrainerCallback):
     def on_step_end(self, args, state, control, **kwargs):
-        print(f"[CPU] Step {state.global_step} 완료")
+        if state.global_step % 200 == 0:
+            src_dir = os.path.join(args.output_dir, f"checkpoint-{state.global_step}")
+            dst_dir = os.path.join(args.output_dir, f"../save-point/checkpoint-{state.global_step}-permanent")
+            if os.path.exists(src_dir) and not os.path.exists(dst_dir):
+                shutil.copytree(src_dir, dst_dir)
+                print(f"[✓] Permanent checkpoint saved at {dst_dir}")
 
 
 def convert_to_gguf(gguf_name, output_dir):
@@ -46,6 +63,7 @@ def train_and_convert():
     gguf_name = config["gguf_name"]
     batch_size = config.get("batch_size", 1)
     epochs = config.get("epochs", 3)
+    set_seed(77)
 
     print("[✓] 모델 및 토크나이저 로딩 중...")
     tokenizer = AutoTokenizer.from_pretrained(base_model_path, use_fast=True)
@@ -55,7 +73,7 @@ def train_and_convert():
     ).to("cpu")  # 명시적 CPU 로딩
 
     print("[✓] 토크나이즈된 데이터셋 로딩 중: ./tokenized_dataset")
-    dataset = load_from_disk("./tokenized_dataset")
+    dataset = LoggingDataset(load_from_disk("./tokenized_dataset").shuffle(seed=77))
 
     training_args = TrainingArguments(
         output_dir=output_dir,
@@ -81,11 +99,20 @@ def train_and_convert():
         train_dataset=dataset,
         tokenizer=tokenizer,
         data_collator=data_collator,
-        callbacks=[GpuMemoryLogger()]
+        callbacks=[SavePermanentCheckpointCallback()]
     )
 
     print("[→] 학습 시작...")
-    trainer.train()
+    output_dir = "outputs/distilled"
+    checkpoint_exists = (
+        os.path.isdir(output_dir)
+        and any("checkpoint" in d for d in os.listdir(output_dir))
+    )
+
+    if checkpoint_exists:
+        trainer.train(resume_from_checkpoint=True)
+    else:
+        trainer.train()
     print("[✓] 학습 완료")
 
     print("[→] 모델 저장 중...")

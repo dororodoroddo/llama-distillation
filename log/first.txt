@@ -1,0 +1,120 @@
+[CPU] Step 1 완료
+{'loss': 2.2443, 'grad_norm': 20.545177459716797, 'learning_rate': 5e-05, 'epoch': 0.0}
+  0%|▏                                                                                                                        
+CPU] Step 2 완료
+{'loss': 1.6913, 'grad_norm': 25.305721282958984, 'learning_rate': 4.995833333333333e-05, 'epoch': 0.01}
+  0%|▍                                                                                                                        
+CPU] Step 3 완료
+{'loss': 1.5895, 'grad_norm': 19.255056381225586, 'learning_rate': 4.991666666666667e-05, 'epoch': 0.01}
+  0%|▌                                                                                                                        
+CPU] Step 4 완료
+{'loss': 1.6432, 'grad_norm': 11.6420259475708, 'learning_rate': 4.9875000000000006e-05, 'epoch': 0.01}
+  0%|▊                                                                                                                        
+CPU] Step 5 완료
+{'loss': 1.5535, 'grad_norm': 11.017742156982422, 'learning_rate': 4.9833333333333336e-05, 'epoch': 0.01}
+  0%|▉                                                                                                                        
+CPU] Step 6 완료
+{'loss': 1.3375, 'grad_norm': 13.997678756713867, 'learning_rate': 4.979166666666667e-05, 'epoch': 0.01}
+  0%|█▏                                                                                                                       
+CPU] Step 7 완료
+{'loss': 1.0393, 'grad_norm': 15.787848472595215, 'learning_rate': 4.975e-05, 'epoch': 0.02}
+  1%|█▎                                                                                                                       
+CPU] Step 8 완료
+{'loss': 1.4165, 'grad_norm': 12.475982666015625, 'learning_rate': 4.970833333333333e-05, 'epoch': 0.02}
+  1%|█▌                                                                                                                       
+CPU] Step 9 완료
+{'loss': 1.6561, 'grad_norm': 29.20985221862793, 'learning_rate': 4.966666666666667e-05, 'epoch': 0.02}
+  1%|█▋                                                                                                                       
+CPU] Step 10 완료
+{'loss': 1.8693, 'grad_norm': 81.67825317382812, 'learning_rate': 4.962500000000001e-05, 'epoch': 0.03}
+  1%|█▉                                                                                                                       
+CPU] Step 11 완료
+{'loss': 1.0747, 'grad_norm': 13.13319206237793, 'learning_rate': 4.958333333333334e-05, 'epoch': 0.03}
+  1%|██                                                                                                                       
+CPU] Step 12 완료
+{'loss': 1.498, 'grad_norm': 11.603860855102539, 'learning_rate': 4.954166666666667e-05, 'epoch': 0.03}
+  1%|██▎                                                                                                                      
+CPU] Step 13 완료
+{'loss': 1.5222, 'grad_norm': 8.977225303649902, 'learning_rate': 4.9500000000000004e-05, 'epoch': 0.03}
+  1%|██▍                                                                                                                      
+CPU] Step 14 완료
+{'loss': 0.8639, 'grad_norm': 13.996094703674316, 'learning_rate': 4.9458333333333334e-05, 'epoch': 0.04}
+  1%|██▋                                                                                                                      
+CPU] Step 15 완료
+{'loss': 1.5286, 'grad_norm': 8.251537322998047, 'learning_rate': 4.9416666666666664e-05, 'epoch': 0.04}
+  1%|██▊                                                                                                                      
+CPU] Step 16 완료
+{'loss': 1.5324, 'grad_norm': 8.445456504821777, 'learning_rate': 4.937500000000001e-05, 'epoch': 0.04}
+  1%|███                                                                                                                      
+CPU] Step 17 완료
+{'loss': 1.514, 'grad_norm': 8.2215576171875, 'learning_rate': 4.933333333333334e-05, 'epoch': 0.04}
+  1%|███▏                                                                                                                     
+CPU] Step 18 완료
+{'loss': 1.6904, 'grad_norm': 8.78504467010498, 'learning_rate': 4.929166666666667e-05, 'epoch': 0.04}
+  2%|███▍                                                                                                                     
+CPU] Step 19 완료
+{'loss': 1.4097, 'grad_norm': 14.66068172454834, 'learning_rate': 4.9250000000000004e-05, 'epoch': 0.05}
+  2%|███▌                                                                                                                     
+CPU] Step 20 완료
+{'loss': 1.2539, 'grad_norm': 8.299817085266113, 'learning_rate': 4.9208333333333335e-05, 'epoch': 0.05}
+  2%|███▊                                                                                                                     
+CPU] Step 21 완료
+{'loss': 0.5171, 'grad_norm': 5.405878067016602, 'learning_rate': 4.9166666666666665e-05, 'epoch': 0.05}
+  2%|███▉                                                                                                                     
+CPU] Step 22 완료
+{'loss': 0.5309, 'grad_norm': 6.651381969451904, 'learning_rate': 4.9125e-05, 'epoch': 0.06}
+  2%|████▏                                                                                                                    
+CPU] Step 23 완료
+{'loss': 1.4597, 'grad_norm': 8.010611534118652, 'learning_rate': 4.908333333333334e-05, 'epoch': 0.06}
+  2%|████▎                                                                                                                    
+CPU] Step 28 완료
+{'loss': 1.2646, 'grad_norm': 9.648568153381348, 'learning_rate': 4.8875e-05, 'epoch': 0.07}
+  2%|█████▏
+CPU] Step 29 완료
+{'loss': 1.3556, 'grad_norm': 7.790156841278076, 'learning_rate': 4.883333333333334e-05, 'epoch': 0.07}
+  2%|█████▍
+CPU] Step 30 완료
+{'loss': 1.1387, 'grad_norm': 7.490832805633545, 'learning_rate': 4.879166666666667e-05, 'epoch': 0.07}
+  2%|█████▌
+CPU] Step 31 완료
+{'loss': 0.3902, 'grad_norm': 7.78070068359375, 'learning_rate': 4.875e-05, 'epoch': 0.08}  
+  3%|██    
+CPU] Step 32 완료
+{'loss': 1.1805, 'grad_norm': 10.485543251037598, 'learning_rate': 4.8708333333333336e-05, 'epoch': 0.08}
+  3%|██ 
+CPU] Step 33 완료
+{'loss': 1.3153, 'grad_norm': 6.501687526702881, 'learning_rate': 4.866666666666667e-05, 'epoch': 0.08}
+  3%|███▍
+CPU] Step 34 완료
+{'loss': 1.3334, 'grad_norm': 6.349709510803223, 'learning_rate': 4.8625e-05, 'epoch': 0.09}
+  3%|███▌
+CPU] Step 35 완료
+{'loss': 0.399, 'grad_norm': 4.76284122467041, 'learning_rate': 4.858333333333333e-05, 'epoch': 0.09}
+  3%|███▋
+CPU] Step 36 완료
+{'loss': 1.3391, 'grad_norm': 7.45547342300415, 'learning_rate': 4.854166666666667e-05, 'epoch': 0.09}
+  3%|███▊
+CPU] Step 37 완료
+{'loss': 1.6055, 'grad_norm': 7.667978763580322, 'learning_rate': 4.85e-05, 'epoch': 0.09}
+  3%|███▉
+CPU] Step 38 완료
+{'loss': 0.3491, 'grad_norm': 6.358734130859375, 'learning_rate': 4.845833333333334e-05, 'epoch': 0.1}
+  3%|████
+CPU] Step 39 완료
+{'loss': 1.4276, 'grad_norm': 7.854705810546875, 'learning_rate': 4.8416666666666673e-05, 'epoch': 0.1}
+  3%|████▏
+CPU] Step 40 완료
+{'loss': 1.3481, 'grad_norm': 8.115641593933105, 'learning_rate': 4.8375000000000004e-05, 'epoch': 0.1}
+  3%|████▏
+CPU] Step 41 완료
+{'loss': 1.3822, 'grad_norm': 7.504827976226807, 'learning_rate': 4.8333333333333334e-05, 'epoch': 0.1}
+  3%|████▎ 
+CPU] Step 42 완료
+{'loss': 1.4127, 'grad_norm': 7.023727893829346, 'learning_rate': 4.829166666666667e-05, 'epoch': 0.1}
+  4%|████▍ 
+CPU] Step 43 완료
+{'loss': 1.1117, 'grad_norm': 8.705767631530762, 'learning_rate': 4.825e-05, 'epoch': 0.11}
+  4%|████▌ 
+CPU] Step 44 완료
+{'loss': 0.6678, 'grad_norm': 5.5936102867126465, 'learning_rate': 4.820833333333333e-05, 'epoch': 0.11}
+  4%|████▋ 

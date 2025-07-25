@@ -7,6 +7,6 @@
   "gguf_name": "tiny2.gguf",
   "max_length": 512,
   "fp16": true,
-  "batch_size": 1,
+  "batch_size": 2,
   "epochs": 3
 }
