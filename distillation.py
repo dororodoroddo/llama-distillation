@@ -44,7 +44,7 @@ def convert_to_gguf(gguf_name, output_dir):
     try:
         print("[→] GGUF 변환 시작...")
         subprocess.run([
-            "python", "../llama.cpp/convert.py",
+            "python", "../llama.cpp/convert_hf_to_gguf.py",
             "--outfile", gguf_name,
             "--outdir", "./ouputGguf",
             output_dir

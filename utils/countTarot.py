@@ -11,7 +11,7 @@ def count():
     base_dir = "./promptOrigin/"
 
     # 대상 파일 이름들 (1.txt ~ 100.txt)
-    for i in range(1, 101):
+    for i in range(1, 151):
         file_path = os.path.join(base_dir, f"{i}.txt")
         if not os.path.isfile(file_path):
             continue

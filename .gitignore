@@ -16,3 +16,7 @@ __pycache__/
 
 /temp/
 /outputs/
+
+/my-check/
+*/checkpoint-*
+checkpoint-*
